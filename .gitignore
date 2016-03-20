@@ -45,3 +45,8 @@ $RECYCLE.BIN/
 Network Trash Folder
 Temporary Items
 .apdisk
+console-gateway/.classpath
+console-gateway/.project
+console-gateway/.settings/org.eclipse.m2e.core.prefs
+console-gateway/.settings/org.eclipse.core.resources.prefs
+*.prefs
