@@ -4,6 +4,8 @@ Simple application to send measurements to AppIoT
 # Prerequisites
 Download and install oracle java: http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html
 
+Make sure java.exe is in your path. https://www.java.com/en/download/help/path.xml
+
 To edit source code, download and install eclipse: http://www.eclipse.org/downloads/packages/eclipse-ide-java-developers/mars2
 
 # Prepare
