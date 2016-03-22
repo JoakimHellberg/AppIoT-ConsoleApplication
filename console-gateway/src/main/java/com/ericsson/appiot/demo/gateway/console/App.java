@@ -3,6 +3,7 @@ package com.ericsson.appiot.demo.gateway.console;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.List;
+import java.util.UUID;
 import java.util.Vector;
 
 import org.apache.http.HttpResponse;
@@ -13,6 +14,7 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicHeader;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 
 /**
  * AppIoT Console Gateway
@@ -29,21 +31,40 @@ public class App
 	private static final String HeaderValueContentType 		= "application/atom+xml;type=entry;charset=utf-8";
 	private static final String HeaderValueApplicationJson 	= "application/json";
 	
-	private static final String RegistrationTicket	 		= "<INSERT REGISTRATION TICKET HERE. PLEASE MAKE SURE TO ESCAPE QUOTES>";
-	private static final String SensorId 					= "<INSERT SENSOR ID>";
+	private static String sensorId = null;
 	
     public static void main( String[] args )
     {
     	App app = new App();
-    	
-    	// Deserialize registration ticket string
-    	RegistrationTicket ticket = new Gson().fromJson(RegistrationTicket, RegistrationTicket.class);
-		
-		System.out.println("Enter a measurement and press enter. Type exit to shut down application.");
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		try {
 			String input = "";
+
+			System.out.println("Enter registration ticket.");
+			RegistrationTicket ticket = null;
+			while(ticket == null) {
+				input = br.readLine();
+				try {
+					ticket = new Gson().fromJson(input, RegistrationTicket.class);
+				} catch (JsonSyntaxException e) {
+					ticket = null;
+					System.out.println("Invalid registration ticket. Please try again.");
+				}
+			}			
+
+			System.out.println("Enter sensor id.");
+			while(sensorId == null) {
+				try {
+					input = br.readLine();
+					sensorId = input;
+				} catch (NumberFormatException nfe) {
+					
+					System.out.println("Invalid registration ticket. Please try again.");
+				}
+			}			
+
 			while(true) {
+				System.out.println("Enter a measurement and press enter. Type exit to shut down application.");
 				input = br.readLine();
 				if(input.equalsIgnoreCase("exit")) {
 					break;
@@ -107,7 +128,7 @@ public class App
 
 		// The measurement belong to a single sensor producing a measurement serie. 
 		Measurements measurementSerie = new Measurements();
-		measurementSerie.setSensorId(SensorId);
+		measurementSerie.setSensorId(sensorId);
 		measurementSerie.addMeasurementMessage(measurementMessage);
 		
 		// Add the measurements serie to the list of measurement series.
@@ -125,7 +146,9 @@ public class App
 	    	HttpClient httpClient = HttpClientBuilder.create().build();
 	    	HttpResponse response = httpClient.execute(request);
 	    	int responseCode = response.getStatusLine().getStatusCode();
-	    	System.out.println("RESPONSE CODE: " + responseCode);
+	    	if(responseCode != 201) {
+	    		System.out.println("Unexpected response from Azure Event Hub: " + responseCode);
+	    	}
 		
 		} catch (Exception e) {
 			e.printStackTrace();
