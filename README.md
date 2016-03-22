@@ -13,5 +13,5 @@ Create a Gateway in AppIoT and download the registration ticket.
 
 Create a device in AppIoT and browse to a sensor. Get the sensor id.
 
-Download files "console-gateway-1.0-jar-with-dependencies.jar" and "ConsoleGateway.bat" from https://github.com/JoakimHellberg/AppIoT-ConsoleApplication/tree/master/console-gateway/bin/ to a common directory and start ConsoleGateway.bat.
+Download files "ConsoleGateway-1.0-jar-with-dependencies.jar" and "ConsoleGateway.bat" from https://github.com/JoakimHellberg/AppIoT-ConsoleApplication/tree/master/console-gateway/bin/ to a common directory and start ConsoleGateway.bat.
 
