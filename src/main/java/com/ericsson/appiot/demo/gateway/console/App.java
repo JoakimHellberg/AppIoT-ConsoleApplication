@@ -1,6 +1,9 @@
 package com.ericsson.appiot.demo.gateway.console;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.List;
 import java.util.UUID;
@@ -12,7 +15,6 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicHeader;
-
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 
@@ -40,9 +42,10 @@ public class App
 		try {
 			String input = "";
 
-			System.out.println("Enter registration ticket.");
-			RegistrationTicket ticket = null;
+			RegistrationTicket ticket = app.getRegistrationTicket();
+			
 			while(ticket == null) {
+				System.out.println("Enter registration ticket.");
 				input = br.readLine();
 				try {
 					ticket = new Gson().fromJson(input, RegistrationTicket.class);
@@ -83,6 +86,24 @@ public class App
 			System.out.println("Unexpected exception, shutting down...");
 		}		
     }		
+    
+	public RegistrationTicket getRegistrationTicket() throws IOException {
+		RegistrationTicket result = null;
+		try {
+			File ticketFile = new File("ticket.json");
+			if(!ticketFile.exists()) {
+				return null;
+			}
+			FileReader fr = new FileReader(ticketFile);
+            BufferedReader in = new BufferedReader(fr);
+            String ticket = in.readLine();
+            result = new Gson().fromJson(ticket, RegistrationTicket.class);
+            in.close();
+        }
+        catch (Exception e) {
+        }
+		return result;
+	}
     
 	private void sendMeasurement(RegistrationTicket ticket, double measurement) {
 		
